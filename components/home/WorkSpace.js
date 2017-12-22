@@ -8,7 +8,7 @@ class Head extends React.Component {
 
     render() {
         return (
-            <h2>{this.props.title}</h2>
+            <h3 className="workspace-title">{this.props.title}</h3>
         );
     }
 }
@@ -21,65 +21,115 @@ class WSItem extends React.Component {
     }
 
     mouseOverHandle(e) {
-        // e.target.style.backgroundColor="#ddf0fb";
-
-        if (!e)
-            e = window.event;
-        var reltg = e.relatedTarget ? e.relatedTarget : e.fromElement;
-        while (reltg && reltg != this) reltg = reltg.parentNode;
-        if (reltg != this) {
-// 这里可以编写 onmouseenter 事件的处理代码
-            e.target.style.backgroundColor="#ddf0fb";
+        if(e.target==this.refs.div) {
+            e.target.style.backgroundColor = "#ddf0fb";
+        }else {
+            this.refs.div.style.backgroundColor = "#ddf0fb";
         }
-
     }
 
     mouseOutHandle(e) {
-        // e.target.style.backgroundColor = "#EFF5F7";
-        if (!e)
-            e = window.event;
-        var reltg = e.relatedTarget ? e.relatedTarget : e.toElement;
-        while (reltg && reltg != this) reltg = reltg.parentNode;
-        if (reltg != this) {
-// 这里可以编写 onmouseleave 事件的处理代码
-            e.target.style.backgroundColor = "#EFF5F7";
+        if(!this.props.selected){
+
+            if(e.target==this.refs.div){
+                e.target.style.backgroundColor = "#ffffff";
+            }else {
+                this.refs.div.style.backgroundColor = "#ddf0fb";
+            }
+
         }
+
     }
 
     render() {
-        return (
-            <div
-                onMouseOver={this.mouseOverHandle}
-                onMouseOut={this.mouseOutHandle}
-                className="workspace-item">
-                <img
-                    src={require("../../img/launcher.png")}
-                    className="workspace-item-head"/>
+        if (this.props.url != null) {
+            if (this.props.selected) {
+                return (
+                    <div
+                        ref="div"
+                        onMouseOver={this.mouseOverHandle}
+                        onMouseOut={this.mouseOutHandle}
+                        className="workspace-item-select">
+                        <img
+                            src={require("../../img/launcher.png")}
+                            className="workspace-item-head"/>
+                        <div
+                            className="workspace-item-content">
+                            <label
+                                className="workspace-item-title">{this.props.title}</label>
+                            <label
+                                className="workspace-item-num">{this.props.num}人参与</label>
+                        </div>
+                        <label
+                            className="workspace-item-fill"></label>
+                        <img
+                            className="workspace-item-more" src={require("../../img/ic_more_vert_black.png")}/>
+                    </div>
+                );
+            } else {
+                return (
+                    <div
+                        ref="div"
+                        onMouseOver={this.mouseOverHandle}
+                        onMouseOut={this.mouseOutHandle}
+                        className="workspace-item">
+                        <img
+                            src={require("../../img/launcher.png")}
+                            className="workspace-item-head"/>
+                        <div
+                            className="workspace-item-content">
+                            <label
+                                className="workspace-item-title">{this.props.title}</label>
+                            <label
+                                className="workspace-item-num">{this.props.num}人参与</label>
+                        </div>
+                        <label
+                            className="workspace-item-fill"></label>
+                        <img
+                            className="workspace-item-more" src={require("../../img/ic_more_vert_black.png")}/>
+                    </div>
+                );
+            }
+
+        } else {
+            return (
                 <div
-                    className="workspace-item-content">
-                    <label
-                        className="workspace-item-title">{this.props.title}</label>
-                    <label
-                        className="workspace-item-num">{this.props.num}人参与</label>
+                    ref="div"
+                    onMouseOver={this.mouseOverHandle}
+                    onMouseOut={this.mouseOutHandle}
+                    className="workspace-item">
+                    <div
+                        className="workspace-item-head-bg">
+                        <img
+                            src={require("../../img/ic_add_white.png")}
+                            className="workspace-item-head-img"/>
+                    </div>
+
+                    <div
+                        className="workspace-item-content">
+                        <label
+                            className="workspace-item-title">创建工作区</label>
+                        <label
+                            className="workspace-item-num">每月赠送10GB</label>
+                    </div>
+                    <label className="workspace-item-fill"></label>
                 </div>
-                <label
-                    className="workspace-item-fill"></label>
-                <img
-                    className="workspace-item-more" src={require("../../img/ic_more_vert_black.png")}/>
-            </div>
-        );
+            );
+        }
+
     }
 }
 export default class WorkSpace extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            total_num: 0,
-            projects: []
+            empty: true,
+            itemList: []
         };
         this.openHandle = this.openHandle.bind(this);
         this.closeHandle = this.closeHandle.bind(this);
         this.responseHandle = this.responseHandle.bind(this);
+        this.getItem = this.getItem.bind(this);
 
     }
 
@@ -114,40 +164,163 @@ export default class WorkSpace extends React.Component {
             }
         }).then((response) => response.json())
             .then((json) => {
-                this.responseHandle(json);
+                let myProject = json.projects;
+                let url = "http://localhost:3333/cydex/api/v1/projects?" +
+                    "type=2&" +
+                    "with_admin_user=1&" +
+                    "page_size=20&" +
+                    "page_num=1";
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "x-us-authtype": "1",
+                        "accept-language": "zh-cn",
+                        "time-zone": "-8",
+                        "x-us-token": token
+                    }
+                }).then((response) => response.json())
+                    .then((json) => {
+                        let joinProject = json.projects;
+                        this.responseHandle(myProject, joinProject);
+
+                    }).catch((error) => {
+                    console.log(`error = ${error}`);
+                });
             }).catch((error) => {
             console.log(`error = ${error}`);
         });
     }
 
-    responseHandle(response) {
+    responseHandle(myProject, joinProject) {
+
+        let projectID = localStorage.getItem("selectProjectID");
+
+        if (projectID == null) {
+            if (myProject!= null) {
+                projectID = myProject[0].id;
+                localStorage.setItem("selectProjectID", projectID);
+            } else if (joinProject!=null) {
+                projectID = joinProject[0].id;
+                localStorage.setItem("selectProjectID", projectID);
+            }
+
+        } else {
+
+            let exist = false;
+            if( myProject!=null){
+                for (let i = 0; i < myProject.length; i++) {
+                    if (myProject[i].id == projectID) {
+                        exist = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!exist && joinProject!=null) {
+
+                for (let i = 0; i < joinProject.length; i++) {
+                    if (joinProject[i].id == projectID) {
+                        exist = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!exist) {
+                if (myProject!=null) {
+                    projectID = myProject[0].id;
+                    localStorage.setItem("selectProjectID", projectID);
+                } else if (joinProject!=null) {
+                    projectID = joinProject[0].id;
+                    localStorage.setItem("selectProjectID", projectID);
+                }else {
+                    localStorage.removeItem("selectProjectID");
+                    projectID=null;
+                }
+            }
+
+        }
+
+        if(projectID!=null){
+
+
+        }
+
+        let ItemList = [<Head title="我创建的工作区"/>];
+
+        console.log(`length = ${ItemList.length}`);
+
+        if(myProject!=null){
+            let myItems = myProject.map((item, index) => (
+                this.getItem(item, index, projectID)
+            ));
+
+            ItemList = myItems.reduce(function (coll, item) {
+                coll.push(item);
+                return coll;
+            }, ItemList);
+        }
+
+        ItemList.push(<WSItem/>);
+
+        if (joinProject!=null) {
+            ItemList.push(<Head title="我加入的工作区"/>);
+
+            let joinItems = joinProject.map((item, index) => (
+                this.getItem(item, index, projectID)
+            ));
+
+            ItemList = joinItems.reduce(function (coll, item) {
+                coll.push(item);
+                return coll;
+            }, ItemList);
+        }
+
         this.setState({
-            total_num: response.total_num,
-            projects: response.projects
+            empty: false,
+            itemList: ItemList
         });
+    }
+
+    getItem(item, index, selectId) {
+        if (selectId !=null && item.id == selectId) {
+            return (
+                <WSItem
+                    key={item.id}
+                    url={item.pic_url}
+                    title={item.name}
+                    num={item.members_num}
+                    selected={true}/>
+            );
+        } else {
+            return (
+                <WSItem
+                    key={item.id}
+                    url={item.pic_url}
+                    title={item.name}
+                    num={item.members_num}
+                    selected={false}/>
+            );
+        }
+
     }
 
     render() {
 
         console.log(`render total_num = ${this.state.total_num}`);
 
-        if (this.state.total_num == 0) {
-            return (
-                <div ref="div" className="workspace">Workspace</div>
-            );
-        } else {
-            let data = this.state.projects;
-            // console.log(`length = ${data.length}`);
-            const ItemList = data.map((item, index) => (
-                <WSItem
-                    key={index}
-                    url={item.pic_url}
-                    title={item.name}
-                    num={item.members_num}/>
-            ));
-            console.log(ItemList);
+        if (this.state.empty == true) {
             return (
                 <div ref="div" className="workspace">
+                    <h2>工作区</h2>
+                </div>
+            );
+        } else {
+
+            let ItemList = this.state.itemList;
+            return (
+                <div ref="div" className="workspace">
+                    <h2 className="workspace-title">工作区</h2>
                     {ItemList}
                 </div>
             );
