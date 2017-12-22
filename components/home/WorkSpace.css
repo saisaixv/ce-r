@@ -1,0 +1,58 @@
+.workspace{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 260px;
+    height: 100%;
+    background-color: white;
+    top: 0px;
+    right: -260px;
+    transition: 300ms;
+}
+
+.workspace-item{
+    cursor: pointer;/*鼠标放上去变小手*/
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 4px;
+}
+
+.workspace-item-head{
+    cursor: pointer;/*鼠标放上去变小手*/
+    width: 40px;
+    margin: 20px;
+    border-radius: 20px;
+}
+
+.workspace-item-content{
+    cursor: pointer;/*鼠标放上去变小手*/
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    height: 40px;
+    width: 100px;
+}
+
+.workspace-item-title{
+    cursor: pointer;/*鼠标放上去变小手*/
+    font-size: small;
+}
+
+.workspace-item-num{
+    cursor: pointer;/*鼠标放上去变小手*/
+    font-size: small;
+}
+
+.workspace-item-fill{
+    cursor: pointer;/*鼠标放上去变小手*/
+    flex-grow: 1;
+}
+
+.workspace-item-more{
+    cursor: pointer;/*鼠标放上去变小手*/
+    align-self: center;
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+}

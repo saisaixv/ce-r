@@ -1,0 +1,22 @@
+.content-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.content-item-head-img{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.content-item-fill{
+    flex-grow: 1;
+}
+.content-item-line{
+    width: 1px;
+    height: 30px;
+    background-color: #2f3238;
+}

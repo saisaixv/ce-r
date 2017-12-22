@@ -1,0 +1,38 @@
+
+.toolbar{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    background-color: #2fa0ec;
+    align-items: center;
+    box-shadow: 0 0 5px #000;/* 第一个参数0 代表距离对象左间距为0开始显示阴影，第二个参数表示距离上间距 第三个阴影范围大小，第四个阴影颜色，最后一个 inset代表对象内阴影，不设置表示外阴影*/
+}
+
+.toolbar-menu{
+    margin: 20px;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;/*鼠标放上去变小手*/
+}
+
+.toolbar-title{
+    color: white;
+}
+.toolbar-project-name{
+    margin-left: 10px;
+    color: white;
+}
+
+.toolbar-projectbg{
+    border-radius: 20px;
+    height:40px;
+    width: 40px;;
+}
+.toolbar-arr{
+    height: 40px;
+    width: 40px;
+}
+
+.toolbar-fill{
+    flex-grow: 1;
+}

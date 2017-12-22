@@ -1,0 +1,51 @@
+.box{
+    height: auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 20%;
+}
+.aaa{
+    padding: 50px;
+    border: 1px solid #aaaaaa ;
+    border-radius: 10px;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    justify-content: center;
+}
+.inputmailbox{
+    height: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    border: 1px solid #aaaaaa;
+}
+.inputpassword{
+    height: 30px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    border: 1px solid #aaaaaa;
+}
+.fogotpwd{
+    height: 20px;
+    font-size: small;
+    align-self: flex-end;
+    color: #409eff;
+}
+.register{
+    height: 20px;
+    font-size: small;
+    align-self: flex-end;
+    color: #409eff;
+}
+
+.inputlogin{
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    background-color: #409eff;
+    height:30px;
+}

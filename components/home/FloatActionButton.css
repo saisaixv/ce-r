@@ -1,0 +1,20 @@
+.floatactionbutton{
+    display: flex;
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    background-color: #F37E21;
+    box-shadow: 0px 2px 3px #888888;
+    top: auto;
+    left: auto;
+    right: 50px;
+    bottom: 50px;
+    position: fixed;
+    justify-content: center;
+}
+
+.floatactionbutton-img{
+    height: 20px;
+    width: 20px;
+    align-self: center;
+}

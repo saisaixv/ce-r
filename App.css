@@ -1,0 +1,21 @@
+.router{
+    background-color: red;
+    width: 100%;
+    height: 100%;
+}
+
+.div{
+    /*background-color: red;*/
+    width: 100%;
+    height: 100%;
+}
+/*去掉 浏览器默认边距*/
+html,body{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: #EFF5F7;
+}
+
