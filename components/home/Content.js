@@ -51,21 +51,62 @@ export default class Content extends React.Component {
 
         this.state = {
             data: [],
-            total_num: 0
+            total_num: 0,
+            type:'r',
+            projectId:''
         };
         this.responseHandle = this.responseHandle.bind(this);
         this.getItem = this.getItem.bind(this);
         this.loadData = this.loadData.bind(this);
+        this.refrersh=this.refrersh.bind(this);
     }
 
-    loadData(projectId,type) {
+    setType(type){
+        this.setState({
+            type:type
+        });
+        this.refrersh()
+    }
+
+    refrersh() {
 
         let token = localStorage.getItem("token");
         // console.log(`${token}`)
         // console.log(`${this.props.projectId}`)
         let url = "http://localhost:3333/cydex/api/v1/packages?" +
+            `project_id=${this.state.projectId}&` +
+            `t=${this.state.type}&` +
+            "with_sender=1&" +
+            "page_size=50&" +
+            "page_num=1";
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "x-us-authtype": "1",
+                "accept-language": "zh-cn",
+                "time-zone": "-8",
+                "x-us-token": token
+            }
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                this.responseHandle(json);
+            }).catch((error) => {
+            // console.log(`error = ${error}`);
+        });
+    }
+
+    loadData(projectId) {
+
+        this.setState({
+            projectId:projectId
+        });
+        let token = localStorage.getItem("token");
+        // console.log(`${token}`)
+        // console.log(`${this.props.projectId}`)
+        let url = "http://localhost:3333/cydex/api/v1/packages?" +
             `project_id=${projectId}&` +
-            `t=${type}&` +
+            `t=${this.state.type}&` +
             "with_sender=1&" +
             "page_size=50&" +
             "page_num=1";

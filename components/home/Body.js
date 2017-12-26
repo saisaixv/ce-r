@@ -35,11 +35,11 @@ export default class Body extends React.Component {
     }
 
     showInBoxHandle(){
-
+        this.refs.content.setType("r")
     }
 
     showOutBoxHandle(){
-
+        this.refs.content.setType("s")
     }
     showRateOfFlowHandle(){
 
