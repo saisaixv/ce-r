@@ -1,0 +1,7 @@
+export const MENU_INBOX='MENU_INBOX'
+export const MENU_OUTBOX='MENU_OUTBOX'
+export const MENU_RATEOFFLOW='MENU_RATEOFFLOW'
+export const MENU_STATISTICS='MENU_STATISTICS'
+export const MENU_PAY='MENU_PAY'
+export const MENU_CART='MENU_CART'
+export const MENU_NOTIFY='MENU_NOTIFY'

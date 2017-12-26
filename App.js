@@ -1,15 +1,17 @@
 import React from 'react';
 import "./App.css"
 
+
 import {HashRouter as Router,Route,Link} from "react-router-dom"
 
 import Home from "./components/Home"
 import About from "./components/About"
 import Login from "./components/Login"
 
-class App extends React.Component {
+export default class App extends React.Component {
 
     render() {
+
         return (
             <Router>
                 <div className="div">
@@ -25,5 +27,3 @@ class App extends React.Component {
     // }
 }
 
-
-export default App

@@ -1,95 +1,148 @@
 import React from "react"
 
-import "./Content.css"
+import "./css/Content.css"
+import {crtTimeFtt} from '../../util/DateFormat'
 
-class PackageItem extends React.Component{
+class PackageItem extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
-    render(){
+    render() {
+        // return (
+        //     <div className="content-item">
+        //         {this.props.title}
+        //     </div>
+        // );
+        // console.log(`size =${this.props.size}`)
         return (
             <div className="content-item">
                 <img
                     className="content-item-head-img"
-                    src={require(this.props.url)}/>
-                <label>{this.props.title}</label>
+                    src={this.props.url}/>
+                <label className="content-item-sendername">{this.props.sender.user.name}</label>
+                <label className="content-item-title">{this.props.title}</label>
                 <label className="content-item-fill"></label>
-                <label>{this.props.filenum}</label>
+                <label className="content-item-num">{this.props.files_num}</label>
                 <label className="content-item-line"></label>
-                <label>{this.props.filesize}</label>
+                <label className="content-item-size">{this.props.size}</label>
             </div>
         );
     }
 }
 
-
-export default class Content extends React.Component{
-    constructor(props){
+class PackageHead extends React.Component {
+    constructor(props) {
         super(props)
-
-        this.state={
-            data:[],
-            total_num:0
-        };
-        this.responseHandle=this.responseHandle.bind(this);
     }
 
-    componentWillMount(){
+    render() {
 
-        // id=59c1d68eca3e760b8e931c58
-        let token=localStorage.getItem("token");
-        // console.log(`token = ${token}`);
-        let url="http://localhost:3333/cydex/api/v1/packages?" +
-            "project_id='59c1d68eca3e760b8e931c58'&" +
-            "t='r'&" +
+        return (
+            <label>{this.props.date}</label>
+        );
+    }
+}
+
+export default class Content extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            data: [],
+            total_num: 0
+        };
+        this.responseHandle = this.responseHandle.bind(this);
+        this.getItem = this.getItem.bind(this);
+        this.loadData = this.loadData.bind(this);
+    }
+
+    loadData(projectId,type) {
+
+        let token = localStorage.getItem("token");
+        // console.log(`${token}`)
+        // console.log(`${this.props.projectId}`)
+        let url = "http://localhost:3333/cydex/api/v1/packages?" +
+            `project_id=${projectId}&` +
+            `t=${type}&` +
             "with_sender=1&" +
-            "page_size=20&" +
+            "page_size=50&" +
             "page_num=1";
-        fetch(url,{
-            method:"GET",
-            headers:{
-                "x-us-authtype":"1",
-                "accept-language":"zh-cn",
-                "time-zone":"-8",
-                "x-us-token":token
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "x-us-authtype": "1",
+                "accept-language": "zh-cn",
+                "time-zone": "-8",
+                "x-us-token": token
             }
-        }) .then((response) => response.json())
+        })
+            .then((response) => response.json())
             .then((json) => {
                 this.responseHandle(json);
             }).catch((error) => {
-            console.log(`error = ${error}`);
+            // console.log(`error = ${error}`);
         });
     }
 
-    responseHandle(response){
+    responseHandle(response) {
+
+        // console.log(`errno = ${response.errno}`);
         this.setState({
-            total_num:response.total_num,
-            data:response.packages
+            total_num: response.total_num,
+            data: response.packages
         });
     }
 
-    render(){
+    getItem(item, index,date) {
 
-        if(this.state.total_num==0){
+        let str=parseFloat(`${item.create_at}000`);
+        let newdate = crtTimeFtt(str);
+        // console.log(`date = ${date}  newdate = ${newdate}`)
+
+        if (index == 0 || date!==newdate) {
+
+            return (
+                <div>
+                    <PackageHead date={newdate}/>
+                    <PackageItem
+                        key={item.id}
+                        {...item}/>
+                </div>
+            );
+
+        } else {
+            return (
+                <PackageItem
+                    key={item.id}
+                    {...item}/>
+            );
+
+        }
+
+    }
+
+    render() {
+
+        if (this.state.total_num == 0) {
 
             return (
                 <div>Empty</div>
             );
-        }else {
-            let data=this.state.data;
-            const itemList=data.map((item,index)=>{
-                // console.log(`id = ${item.id}`);
-                <PackageItem
-                    url={item.sender.user.pic_url}
-                    filenum={item.files_num}
-                    filesize={item.size}
-                    title={item.title}/>
-            });
+        } else {
+            let data = this.state.data;
+            const itemList = data.map((item, index) => {
+
+
+                    let date=crtTimeFtt(parseFloat(`${data[index>0?index-1:0].create_at}000`))
+                    //使用大括号 之后要用return
+                    return this.getItem(item, index,date)
+                }
+            );
             return (
-                <div>
-                    <itemList/>
+                <div className="content">
+                    {itemList}
                 </div>
             );
         }

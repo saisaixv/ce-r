@@ -1,5 +1,5 @@
 import React from "react"
-import "./WorkSpace.css"
+import "./css/WorkSpace.css"
 
 class Head extends React.Component {
     constructor(props) {
@@ -18,27 +18,44 @@ class WSItem extends React.Component {
         super(props);
         this.mouseOverHandle = this.mouseOverHandle.bind(this);
         this.mouseOutHandle = this.mouseOutHandle.bind(this);
+        this.clickHandle = this.clickHandle.bind(this);
+        this.select = this.select.bind(this);
+        this.createWSHandle = this.createWSHandle.bind(this);
     }
 
     mouseOverHandle(e) {
-        if(e.target==this.refs.div) {
+        if (e.target == this.refs.div) {
             e.target.style.backgroundColor = "#ddf0fb";
-        }else {
+        } else {
             this.refs.div.style.backgroundColor = "#ddf0fb";
         }
     }
 
     mouseOutHandle(e) {
-        if(!this.props.selected){
+        if (!this.props.selected) {
 
-            if(e.target==this.refs.div){
+            if (e.target == this.refs.div) {
                 e.target.style.backgroundColor = "#ffffff";
-            }else {
+            } else {
                 this.refs.div.style.backgroundColor = "#ddf0fb";
             }
-
         }
 
+    }
+
+    clickHandle() {
+        this.props.onClick(this.props.id)
+    }
+
+    createWSHandle(){
+
+        alert("创建工作区");
+    }
+
+    select(value){
+        this.setState({
+            selected:value
+        });
     }
 
     render() {
@@ -46,6 +63,7 @@ class WSItem extends React.Component {
             if (this.props.selected) {
                 return (
                     <div
+                        onClick={this.clickHandle}
                         ref="div"
                         onMouseOver={this.mouseOverHandle}
                         onMouseOut={this.mouseOutHandle}
@@ -69,6 +87,7 @@ class WSItem extends React.Component {
             } else {
                 return (
                     <div
+                        onClick={this.clickHandle}
                         ref="div"
                         onMouseOver={this.mouseOverHandle}
                         onMouseOut={this.mouseOutHandle}
@@ -94,6 +113,7 @@ class WSItem extends React.Component {
         } else {
             return (
                 <div
+                    onClick={this.createWSHandle}
                     ref="div"
                     onMouseOver={this.mouseOverHandle}
                     onMouseOut={this.mouseOutHandle}
@@ -124,12 +144,15 @@ export default class WorkSpace extends React.Component {
         super(props)
         this.state = {
             empty: true,
-            itemList: []
+            myProject:[],
+            joinProject:[],
+            selectId:''
         };
         this.openHandle = this.openHandle.bind(this);
         this.closeHandle = this.closeHandle.bind(this);
         this.responseHandle = this.responseHandle.bind(this);
         this.getItem = this.getItem.bind(this);
+        this.selectWsHandle = this.selectWsHandle.bind(this);
 
     }
 
@@ -146,14 +169,15 @@ export default class WorkSpace extends React.Component {
 
     componentWillMount() {
 
+
         // id=59c1d68eca3e760b8e931c58
         let token = localStorage.getItem("token");
-        // console.log(`token = ${token}`);
         let url = "http://localhost:3333/cydex/api/v1/projects?" +
             "type=1&" +
             "with_admin_user=1&" +
             "page_size=20&" +
             "page_num=1";
+
         fetch(url, {
             method: "GET",
             headers: {
@@ -181,7 +205,12 @@ export default class WorkSpace extends React.Component {
                 }).then((response) => response.json())
                     .then((json) => {
                         let joinProject = json.projects;
-                        this.responseHandle(myProject, joinProject);
+                        // this.responseHandle(myProject, joinProject);
+                        this.setState({
+                            empty: false,
+                            myProject: myProject,
+                            joinProject: joinProject
+                        });
 
                     }).catch((error) => {
                     console.log(`error = ${error}`);
@@ -195,11 +224,13 @@ export default class WorkSpace extends React.Component {
 
         let projectID = localStorage.getItem("selectProjectID");
 
+        console.log(`projectId = ${projectID}`);
+
         if (projectID == null) {
-            if (myProject!= null) {
+            if (myProject != null) {
                 projectID = myProject[0].id;
                 localStorage.setItem("selectProjectID", projectID);
-            } else if (joinProject!=null) {
+            } else if (joinProject != null) {
                 projectID = joinProject[0].id;
                 localStorage.setItem("selectProjectID", projectID);
             }
@@ -207,7 +238,7 @@ export default class WorkSpace extends React.Component {
         } else {
 
             let exist = false;
-            if( myProject!=null){
+            if (myProject != null) {
                 for (let i = 0; i < myProject.length; i++) {
                     if (myProject[i].id == projectID) {
                         exist = true;
@@ -216,7 +247,7 @@ export default class WorkSpace extends React.Component {
                 }
             }
 
-            if (!exist && joinProject!=null) {
+            if (!exist && joinProject != null) {
 
                 for (let i = 0; i < joinProject.length; i++) {
                     if (joinProject[i].id == projectID) {
@@ -227,21 +258,21 @@ export default class WorkSpace extends React.Component {
             }
 
             if (!exist) {
-                if (myProject!=null) {
+                if (myProject != null) {
                     projectID = myProject[0].id;
                     localStorage.setItem("selectProjectID", projectID);
-                } else if (joinProject!=null) {
+                } else if (joinProject != null) {
                     projectID = joinProject[0].id;
                     localStorage.setItem("selectProjectID", projectID);
-                }else {
+                } else {
                     localStorage.removeItem("selectProjectID");
-                    projectID=null;
+                    projectID = null;
                 }
             }
 
         }
 
-        if(projectID!=null){
+        if (projectID != null) {
 
 
         }
@@ -250,7 +281,7 @@ export default class WorkSpace extends React.Component {
 
         console.log(`length = ${ItemList.length}`);
 
-        if(myProject!=null){
+        if (myProject != null) {
             let myItems = myProject.map((item, index) => (
                 this.getItem(item, index, projectID)
             ));
@@ -263,7 +294,7 @@ export default class WorkSpace extends React.Component {
 
         ItemList.push(<WSItem/>);
 
-        if (joinProject!=null) {
+        if (joinProject != null) {
             ItemList.push(<Head title="我加入的工作区"/>);
 
             let joinItems = joinProject.map((item, index) => (
@@ -276,16 +307,16 @@ export default class WorkSpace extends React.Component {
             }, ItemList);
         }
 
-        this.setState({
-            empty: false,
-            itemList: ItemList
-        });
+        return ItemList;
     }
 
     getItem(item, index, selectId) {
-        if (selectId !=null && item.id == selectId) {
+        if (selectId != null && item.id == selectId) {
+            console.log("true");
             return (
                 <WSItem
+                    {...item}
+                    onClick={this.selectWsHandle}
                     key={item.id}
                     url={item.pic_url}
                     title={item.name}
@@ -295,6 +326,8 @@ export default class WorkSpace extends React.Component {
         } else {
             return (
                 <WSItem
+                    {...item}
+                    onClick={this.selectWsHandle}
                     key={item.id}
                     url={item.pic_url}
                     title={item.name}
@@ -305,10 +338,19 @@ export default class WorkSpace extends React.Component {
 
     }
 
+    selectWsHandle(projectId) {
+
+        this.props.onClose()
+        localStorage.setItem("selectProjectID", projectId);
+        this.setState({
+            selectId: projectId
+        });
+        this.props.selectWS(projectId)
+    }
+
+
+
     render() {
-
-        console.log(`render total_num = ${this.state.total_num}`);
-
         if (this.state.empty == true) {
             return (
                 <div ref="div" className="workspace">
@@ -317,7 +359,7 @@ export default class WorkSpace extends React.Component {
             );
         } else {
 
-            let ItemList = this.state.itemList;
+            let ItemList = this.responseHandle(this.state.myProject,this.state.joinProject)
             return (
                 <div ref="div" className="workspace">
                     <h2 className="workspace-title">工作区</h2>

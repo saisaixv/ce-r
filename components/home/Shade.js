@@ -1,5 +1,5 @@
 import React from "react"
-import "./Shade.css"
+import "./css/Shade.css"
 
 export default class Shade extends React.Component{
     constructor(props){
@@ -10,12 +10,10 @@ export default class Shade extends React.Component{
     }
 
     showHandle(){
-        console.log("show");
         this.refs.div.style.visibility="visible";
     }
 
     hiddenHandle(){
-        console.log("hidden");
         this.refs.div.style.visibility="hidden";
     }
 
