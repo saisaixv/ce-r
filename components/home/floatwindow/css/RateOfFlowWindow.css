@@ -5,7 +5,55 @@
     margin-top: 10%;
     margin-left: 20%;
     margin-right: 20%;
-    background-color: red;
     top: 0px;
+    background-color: #EFF5F7;
     visibility: hidden;
+    padding: 20px;
+}
+
+.RateOfFlowWindow-all{
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+    background-color: white;
+}
+
+.RateOfFlowWindow-all-label{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+.RateOfFlowWindow-all-flow-label{
+    width: 200px;
+    align-self: center;
+    background-color: #6be6c1;
+    text-align: center;
+    padding: 5px;
+    margin-right: 20px;
+    color: white;
+    border-radius: 3px;
+}
+
+.RateOfFlowWindow-all-fill{
+    flex-grow: 1;
+}
+
+.freeflow{
+    margin-top: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
+
+.freeflow-label{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.freeflow-chart{
+    flex-grow: 1;
 }
