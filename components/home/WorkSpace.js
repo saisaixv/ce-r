@@ -172,6 +172,7 @@ export default class WorkSpace extends React.Component {
 
         // id=59c1d68eca3e760b8e931c58
         let token = localStorage.getItem("token");
+        console.log(`token = ${token}`);
         let url = "http://localhost:3333/cydex/api/v1/projects?" +
             "type=1&" +
             "with_admin_user=1&" +

@@ -28,6 +28,7 @@ export default class Menu extends React.Component{
         return (
             <div className="menu">
                 <div
+                    title="收件箱"
                     onClick={()=>this.props.onClick(MENU_INBOX)}
                     className="menu-item"
                     onMouseOver={this.mouseOverHandle}
@@ -37,6 +38,7 @@ export default class Menu extends React.Component{
                         className="menu-item-img"/>
                 </div>
                 <div
+                    title="发件箱"
                     onClick={()=>this.props.onClick(MENU_OUTBOX)}
                     className="menu-item"
                     onMouseOver={this.mouseOverHandle}
@@ -47,6 +49,7 @@ export default class Menu extends React.Component{
                 </div>
                 <label className="menu-line"></label>
                 <div
+                    title="剩余流量"
                     onClick={()=>this.props.onClick(MENU_RATEOFFLOW)}
                     className="menu-item"
                     onMouseOver={this.mouseOverHandle}
@@ -56,6 +59,7 @@ export default class Menu extends React.Component{
                         className="menu-item-img"/>
                 </div>
                 <div
+                    title="统计报表"
                     onClick={()=>this.props.onClick(MENU_STATISTICS)}
                     className="menu-item"
                     onMouseOver={this.mouseOverHandle}
@@ -65,6 +69,7 @@ export default class Menu extends React.Component{
                         className="menu-item-img"/>
                 </div>
                 <div
+                    title="充值"
                     onClick={()=>this.props.onClick(MENU_PAY)}
                     className="menu-item"
                     onMouseOver={this.mouseOverHandle}
@@ -74,6 +79,7 @@ export default class Menu extends React.Component{
                         className="menu-item-img"/>
                 </div>
                 <div
+                    title="订单"
                     onClick={()=>this.props.onClick(MENU_CART)}
                     className="menu-item"
                     onMouseOver={this.mouseOverHandle}
@@ -83,6 +89,7 @@ export default class Menu extends React.Component{
                         className="menu-item-img"/>
                 </div>
                 <div
+                    title="通知管理"
                     onClick={()=>this.props.onClick(MENU_NOTIFY)}
                     className="menu-item"
                     onMouseOver={this.mouseOverHandle}

@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "css-loader": "^0.28.7",
+    "echarts": "^3.8.5",
     "file-loader": "^1.1.6",
     "http-proxy-middleware": "^0.17.4",
     "style-loader": "^0.19.1"

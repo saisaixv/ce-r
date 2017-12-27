@@ -65,17 +65,17 @@ export default class Content extends React.Component {
         this.setState({
             type:type
         });
-        this.refrersh()
+        this.refrersh(type)
     }
 
-    refrersh() {
+    refrersh(type) {
 
         let token = localStorage.getItem("token");
-        // console.log(`${token}`)
+        console.log(`type = ${this.state.type}`)
         // console.log(`${this.props.projectId}`)
         let url = "http://localhost:3333/cydex/api/v1/packages?" +
             `project_id=${this.state.projectId}&` +
-            `t=${this.state.type}&` +
+            `t=${type}&` +
             "with_sender=1&" +
             "page_size=50&" +
             "page_num=1";
@@ -166,10 +166,11 @@ export default class Content extends React.Component {
 
     render() {
 
+        console.log("render");
         if (this.state.total_num == 0) {
 
             return (
-                <div>Empty</div>
+                <div className="content">Empty</div>
             );
         } else {
             let data = this.state.data;
