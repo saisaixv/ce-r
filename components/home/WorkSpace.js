@@ -47,14 +47,14 @@ class WSItem extends React.Component {
         this.props.onClick(this.props.id)
     }
 
-    createWSHandle(){
+    createWSHandle() {
 
         alert("创建工作区");
     }
 
-    select(value){
+    select(value) {
         this.setState({
-            selected:value
+            selected: value
         });
     }
 
@@ -144,9 +144,9 @@ export default class WorkSpace extends React.Component {
         super(props)
         this.state = {
             empty: true,
-            myProject:[],
-            joinProject:[],
-            selectId:''
+            myProject: [],
+            joinProject: [],
+            selectId: ''
         };
         this.openHandle = this.openHandle.bind(this);
         this.closeHandle = this.closeHandle.bind(this);
@@ -278,7 +278,7 @@ export default class WorkSpace extends React.Component {
 
         }
 
-        let ItemList = [<Head title="我创建的工作区"/>];
+        let ItemList = [<Head key="0" title="我创建的工作区"/>];
 
         console.log(`length = ${ItemList.length}`);
 
@@ -293,10 +293,10 @@ export default class WorkSpace extends React.Component {
             }, ItemList);
         }
 
-        ItemList.push(<WSItem/>);
+        ItemList.push(<WSItem key="1"/>);
 
         if (joinProject != null) {
-            ItemList.push(<Head title="我加入的工作区"/>);
+            ItemList.push(<Head key="2" title="我加入的工作区"/>);
 
             let joinItems = joinProject.map((item, index) => (
                 this.getItem(item, index, projectID)
@@ -350,7 +350,6 @@ export default class WorkSpace extends React.Component {
     }
 
 
-
     render() {
         if (this.state.empty == true) {
             return (
@@ -360,7 +359,7 @@ export default class WorkSpace extends React.Component {
             );
         } else {
 
-            let ItemList = this.responseHandle(this.state.myProject,this.state.joinProject)
+            let ItemList = this.responseHandle(this.state.myProject, this.state.joinProject)
             return (
                 <div ref="div" className="workspace">
                     <h2 className="workspace-title">工作区</h2>

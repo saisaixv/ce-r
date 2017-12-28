@@ -20,6 +20,7 @@ import {
     MENU_NOTIFY
 } from './home/Constant'
 import RateOfFlowWindow from "./home/floatwindow/RateOfFlowWindow";
+import StatisticWindow from "./home/floatwindow/StatisticWindow";
 
 
 let wsOpen = false;
@@ -58,6 +59,7 @@ export default class Home extends React.Component {
             this.refs.ws.closeHandle();
             this.refs.shade.hiddenHandle();
             this.refs.RateOfFlow.hidden()
+            this.refs.Statistic.hidden()
         } else {
             wsOpen = true;
             this.refs.shade.showHandle();
@@ -106,6 +108,7 @@ export default class Home extends React.Component {
 
     showStatisticsHandle() {
         console.log("统计报表");
+        this.refs.Statistic.show();
     }
 
     showPayHandle() {
@@ -150,7 +153,8 @@ export default class Home extends React.Component {
                         ref="ws"
                         selectWS={this.selectWSHandle}
                         onClose={this.closeWSHandle}/>
-                    <RateOfFlowWindow ref='RateOfFlow' data={data}></RateOfFlowWindow>
+                    <RateOfFlowWindow ref='RateOfFlow'></RateOfFlowWindow>
+                    <StatisticWindow ref='Statistic'/>
                 </div>
 
             );

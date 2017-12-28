@@ -1,0 +1,17 @@
+.selecttable-div{
+    display: flex;
+    flex-direction: column;
+}
+
+.selecttable-item-label-select{
+    color: #2fa0ec;
+    padding: 4px 10px;
+    /*width: 100%;*/
+    cursor:pointer;
+    background-color: #F5F7FA;
+}
+.selecttable-item-label{
+    /*width: 100%;*/
+    padding: 4px 10px;
+    cursor:pointer;
+}

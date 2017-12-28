@@ -1,13 +1,25 @@
+.box-div{
+    /*position: absolute;*/
+    width: 40%;
+    min-width: 800px;
+    /*height: 500px;*/
+    /*margin-top: 20%;*/
+    margin-left: 30%;
+    margin-right: 30%;
+    visibility: hidden;
+    background-color: #9e344f;
+}
+
 .RateOfFlowWindow-div{
     position: absolute;
-    width: 60%;
-    height: 60%;
+    /*width: 100%;*/
+    min-width: 800px;
+    /*!*height: 500px;*!*/
     margin-top: 10%;
-    margin-left: 20%;
-    margin-right: 20%;
+    /*margin-left: 30%;*/
+    /*margin-right: 30%;*/
     top: 0px;
     background-color: #EFF5F7;
-    visibility: hidden;
     padding: 20px;
 }
 
@@ -46,14 +58,17 @@
     display: flex;
     flex-direction: row;
     background-color: white;
+    height: 260px;
 }
 
 .freeflow-label{
-    flex-grow: 1;
+    font-size: smaller;
+    width: 50%;
     display: flex;
     flex-direction: column;
+    align-items: baseline;
 }
 
 .freeflow-chart{
-    flex-grow: 1;
+    width: 50%;
 }

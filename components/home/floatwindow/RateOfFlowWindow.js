@@ -5,13 +5,11 @@ require('echarts/lib/component/title');
 
 import './css/RateOfFlowWindow.css'
 
-export default class RateOfFlowWindow extends React.Component {
+class RateOfFlowChart extends React.Component {
     constructor(props) {
         super(props)
-        this.show = this.show.bind(this);
-        this.hidden = this.hidden.bind(this);
-        this.setPieoption = this.setPieoption.bind(this);
         this.initPie = this.initPie.bind(this);
+        this.setPieoption = this.setPieoption.bind(this);
     }
 
     componentDidMount() {
@@ -22,46 +20,6 @@ export default class RateOfFlowWindow extends React.Component {
         this.initPie()
     }
 
-    show() {
-        this.refs.div.style.visibility = "visible"
-    }
-
-    hidden() {
-        this.refs.div.style.visibility = "hidden"
-    }
-
-    render() {
-
-        // return (
-        //     <div ref="div" className="RateOfFlowWindow-div">
-        //         <h2>Heello</h2>
-        //     </div>
-        // );
-        return (
-            <div ref="div" className="RateOfFlowWindow-div">
-                <h2>剩余流量</h2>
-                <div className="RateOfFlowWindow-all">
-                    <div className="RateOfFlowWindow-all-label">
-                        <label>概览</label>
-                        <label>免费流量和已购流量包的总和</label>
-                    </div>
-                    <label className="RateOfFlowWindow-all-fill"></label>
-                    <label className="RateOfFlowWindow-all-flow-label">剩余10GB</label>
-                </div>
-                <div className="freeflow">
-                    <div className="freeflow-label">
-                        <label>免费流量</label>
-                        <label>所有注册用户均享受每月10GB免费流量，月底清零。</label>
-                    </div>
-                    <div
-                        className="freeflow-chart"
-                        ref="pieReact"
-                        style={{width: '100%', height: '300px'}}></div>
-
-                </div>
-            </div>
-        );
-    }
 
     initPie() {
 
@@ -80,7 +38,7 @@ export default class RateOfFlowWindow extends React.Component {
                 zlevel: 0,
                 z: 4,
                 orient: 'horizontal',
-                x: 'left',
+                x: 'center',
                 y: 'top',
                 backgroundColor: 'rgba(0,0,0,0)',
                 borderColor: '#ccc',
@@ -95,13 +53,15 @@ export default class RateOfFlowWindow extends React.Component {
                 {
                     name: '流量统计',
                     type: 'pie',
-                    center: ["70%", "60%"],
-                    radius: ['0', '75%'],
+                    center: ["60%", "50%"],
+                    radius: ['0', '60%'],
                     clockWise: true,
                     startAngle: 90,
                     minAngle: 0,
                     selectedOffset: 10,
-                    avoidLabelOverlap: true,
+                    // avoidLabelOverlap: true,
+                    selectedMode: 'single',//可选中
+                    legendHoverLink: true,
                     data: data,
                     itemStyle: {
                         normal: {
@@ -117,7 +77,7 @@ export default class RateOfFlowWindow extends React.Component {
                                 return colorList[params.dataIndex]
                             },
                             borderColor: '#fff',
-                            borderWidth: 1,
+                            borderWidth: 0,
                             label: {
                                 show: true,
                                 position: 'outer'
@@ -133,7 +93,7 @@ export default class RateOfFlowWindow extends React.Component {
                         },
                         emphasis: {
                             borderColor: 'rgba(0,0,0,0)',
-                            borderWidth: 1,
+                            borderWidth: 0,
                             label: {
                                 show: true
                             },
@@ -152,4 +112,109 @@ export default class RateOfFlowWindow extends React.Component {
         };
 
     }
+
+    render() {
+        return (
+            <div className="RateOfFlowWindow-div">
+                <h2>剩余流量</h2>
+                <div className="RateOfFlowWindow-all">
+                    <div className="RateOfFlowWindow-all-label">
+                        <label>概览</label>
+                        <label>免费流量和已购流量包的总和</label>
+                    </div>
+                    <label className="RateOfFlowWindow-all-fill"></label>
+                    <label className="RateOfFlowWindow-all-flow-label">剩余{this.props.data[1].value}</label>
+                </div>
+                <div className="freeflow">
+                    <div className="freeflow-label">
+                        <label>免费流量</label>
+                        <label>所有注册用户均享受每月10GB免费流量，月底清零。</label>
+                    </div>
+                    <div
+                        className="freeflow-chart"
+                        ref="pieReact"></div>
+
+                </div>
+            </div>
+        );
+    }
+}
+
+export default class RateOfFlowWindow extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            data: []
+        };
+        this.show = this.show.bind(this);
+        this.hidden = this.hidden.bind(this);
+        this.refresh = this.refresh.bind(this);
+    }
+
+    componentDidMount() {
+        this.refresh();
+    }
+
+    refresh() {
+
+        let token = localStorage.getItem("token");
+        let url = "http://localhost:3333/cydex/api/v1/query_quota_detail"
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "x-us-authtype": "1",
+                "accept-language": "zh-cn",
+                "time-zone": "-8",
+                "x-us-token": token
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json.errno === null) {
+                    console.log(`RateOfFlowWindow errno = ${json.errno}`);
+                } else {
+                    let value=json.user_quota.detail[0].traffic_all - json.user_quota.available_traffic;
+                    this.setState({
+                        data: [{
+                            name: '已用',
+                            value: `${value}`
+                        }, {
+                            name: '剩余',
+                            value: json.user_quota.available_traffic
+                        }]
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(`RateOfFlowWindow refresh ${error}`);
+            })
+    }
+
+    show() {
+        this.refs.div.style.visibility = "visible"
+    }
+
+    hidden() {
+        this.refs.div.style.visibility = "hidden"
+    }
+
+    render() {
+        let data=this.state.data;
+        // return (
+        //     <div ref="div" className="box-div">
+        //         {
+        //             <h2>ascsakdksadkhk</h2>
+        //         }
+        //     </div>
+        // );
+        return (
+            <div ref="div" className="box-div">
+                {
+                    data.length==0?<h2>Loading...</h2>:<RateOfFlowChart data={data}/>
+                }
+            </div>
+        );
+    }
+
+
 }
